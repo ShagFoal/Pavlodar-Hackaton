@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: Auth
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/blog_platform"
+    username: "blog_admin"
+    password: "1"
+  jpa:
+    hibernate:
+      ddl-auto: "create-drop"
+    generate-ddl: true
+
+jwt:
+  secret: alsdjfsalkdfjsadf
+  expiration: 360000000
