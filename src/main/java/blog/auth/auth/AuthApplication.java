@@ -19,13 +19,6 @@ public class AuthApplication {
         SpringApplication.run(AuthApplication.class, args);
     }
 
-    @GetMapping("/am")
-    public String am() {
-        SecurityContext context = SecurityContextHolder.getContext();
-        Authentication auth = context.getAuthentication();
-        return auth.getName();
-    }
-
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
