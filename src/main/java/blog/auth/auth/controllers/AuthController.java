@@ -59,4 +59,9 @@ public class AuthController {
         if (principal == null) return ResponseEntity.badRequest().body("Не авторизован");
         return ResponseEntity.ok("Авторизован");
     }
+
+    @GetMapping
+    public String hello () {
+        return "Hello world";
+    }
 }
