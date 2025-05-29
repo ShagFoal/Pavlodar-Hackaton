@@ -23,6 +23,11 @@ public class UserProfileEntity {
     private List<String> interests;
     private String educationLevel;
     private String preferredRegion;
+    private String surname; // Фамилия
+    private String lastname; // Отечество
+    private String studyPlace; // место обучение
+    private String profession;
+    private String phoneNumber; // номер телефона
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonBackReference
