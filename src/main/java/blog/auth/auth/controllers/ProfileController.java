@@ -6,8 +6,10 @@ import blog.auth.auth.UserProfile.UserProfileService;
 import blog.auth.auth.user.UserEntity;
 import blog.auth.auth.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,5 +41,16 @@ public class ProfileController {
         userService.save(user);
         return "Профиль обновлен";
     }
+
+    @GetMapping("/myProfile")
+    public ResponseEntity<UserProfileEntity> getProfile(Authentication authentication) {
+        UserEntity user = (UserEntity) authentication.getPrincipal();
+        UserProfileEntity profile = userProfileService.findByUser(user);
+        if (profile == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(profile);
+    }
+
 
 }
