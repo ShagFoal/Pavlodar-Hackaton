@@ -6,6 +6,7 @@ import blog.auth.auth.user.UserEntity;
 import blog.auth.auth.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -29,12 +30,13 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody UserDto userDto) {
-        if (userService.findByUsername(userDto.getUsername()) != null)
-            return ResponseEntity.badRequest().body("Пользователь с таким именем уже существует");
+        if (userService.findByEmail(userDto.getEmail()) != null)
+            return ResponseEntity.badRequest().body("Пользователь с такой почтой уже существует");
         String token = jwtUtil.generateToken(userDto);
         UserEntity user = new UserEntity();
         user.setPassword(userDto.getPassword());
         user.setUsername(userDto.getUsername());
+        user.setEmail(userDto.getEmail());
         userService.save(user);
         log.info("Успешно зарегистрирован {}",user);
         return ResponseEntity.ok(token);
@@ -44,7 +46,7 @@ public class AuthController {
     public ResponseEntity<String> login(@RequestBody UserDto userDto) {
         try {
             Authentication authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(userDto.getUsername(),userDto.getPassword()));
+                    .authenticate(new UsernamePasswordAuthenticationToken(userDto.getEmail(),userDto.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (BadCredentialsException ex) {
             return ResponseEntity.badRequest().body(ex.toString());
@@ -55,13 +57,13 @@ public class AuthController {
     }
 
     @GetMapping("/status")
-    public ResponseEntity<?> status(Principal principal) {
-        if (principal == null) return ResponseEntity.badRequest().body("Не авторизован");
-        return ResponseEntity.ok("Авторизован");
+    public ResponseEntity<?> status() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated() || auth.getPrincipal().equals("anonymousUser")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Не авторизован");
+        }
+        UserEntity user = (UserEntity) auth.getPrincipal();
+        return ResponseEntity.ok("Авторизован: " + user.getEmail());
     }
 
-    @GetMapping
-    public String hello () {
-        return "Hello world";
-    }
 }

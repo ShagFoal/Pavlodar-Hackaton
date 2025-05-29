@@ -17,10 +17,14 @@ public class UserService implements UserDetailsService {
         return repo.findByUsername(username).orElse(null);
     }
 
+    public UserEntity findByEmail(String email) {
+        return repo.findByEmail(email).orElse(null);
+    }
+
     public UserEntity save(UserEntity user) {
         if (user != null) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            repo.save(user);
+            return repo.save(user);
         }
         return null;
     }
@@ -30,7 +34,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserEntity loadUserByUsername(String username) throws UsernameNotFoundException {
-        return findByUsername(username);
+    public UserEntity loadUserByUsername(String email) throws UsernameNotFoundException {
+        return findByEmail(email);
     }
 }

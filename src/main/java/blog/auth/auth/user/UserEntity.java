@@ -1,5 +1,7 @@
 package blog.auth.auth.user;
 
+import blog.auth.auth.company.CompanyEntity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,10 +18,13 @@ public class UserEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private String username;
-
     private String password;
+    private String email;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<CompanyEntity> companies; // команиями которыми он владеет
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

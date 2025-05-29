@@ -32,7 +32,8 @@ public class SecurityConfig {
         return http
                 .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
                 .cors(cors -> cors
-                        .configurationSource(request -> configuration()))
+                        .configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
+//                        .configurationSource(request -> configuration()))
                 .authorizeHttpRequests(request -> request.anyRequest().permitAll())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -56,12 +57,12 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(UserService userService) {
         return authentication -> {
-            String username = authentication.getName();
+            String email = authentication.getName();
             String password = authentication.getCredentials().toString();
-            UserEntity user = userService.findByUsername(username);
+            UserEntity user = userService.findByEmail(email);
             if (user == null) throw new BadCredentialsException("Такого пользователя нет");
             if (!userService.passwordMathes(password,user.getPassword())) throw new BadCredentialsException("Пароли не совпадают");
-            return new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword());
+            return new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword());
         };
     }
 }

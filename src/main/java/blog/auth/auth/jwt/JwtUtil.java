@@ -19,14 +19,14 @@ public class JwtUtil {
     public String generateToken(UserDto dto) {
         Algorithm algorithm = Algorithm.HMAC256(secret);
         return JWT.create()
-                .withClaim("User",dto.getUsername())
-                .withSubject(dto.getUsername())
+                .withClaim("Email",dto.getEmail())
+                .withSubject(dto.getEmail())
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + lifeTime))
                 .sign(algorithm);
     }
 
-    public String getUsername(String token) {
+    public String getEmail(String token) {
         DecodedJWT decodedJWT = decodeToken(token);
         return decodedJWT.getSubject();
     }

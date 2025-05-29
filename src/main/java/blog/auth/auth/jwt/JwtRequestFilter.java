@@ -24,19 +24,19 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt;
-        String username = null;
+        String email = null;
         String headerAuth = request.getHeader("Authorization");
         if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
             jwt = headerAuth.substring(7);
             try {
-                username = jwtUtil.getUsername(jwt);
+                email = jwtUtil.getEmail(jwt);
             } catch (Exception e) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Jwt закончился");
                 return;
             }
         }
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserEntity userDetails = userService.loadUserByUsername(username);
+        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserEntity userDetails = userService.loadUserByUsername(email);
             if (userDetails == null) throw new BadCredentialsException("Такого пользователя не существует");
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails,
                     null,userDetails.getAuthorities());
