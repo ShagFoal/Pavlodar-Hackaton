@@ -20,7 +20,7 @@ public class HhService {
     private final HhMapper hhMapper;
 
     // Базовый URL API HeadHunter Kazakhstan
-    private final String HH_API_URL = "https://api.hh.kz/vacancies";
+    private final String HH_API_URL = "https://api.hh.ru/vacancies";
 
     /**
      * Получает список вакансий с сайта hh.kz по заданному ключевому слову и региону.

@@ -2,6 +2,8 @@ package blog.auth.auth.controllers;
 
 import blog.auth.auth.UserProfile.UserProfileEntity;
 import blog.auth.auth.UserProfile.UserProfileService;
+import blog.auth.auth.dto.ProfessionVacancies;
+import blog.auth.auth.services.CareerService;
 import blog.auth.auth.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +20,15 @@ import java.util.List;
 @RequestMapping("/recomendation")
 @RequiredArgsConstructor
 public class RecomendationController {
-    private UserProfileService userProfileService;
-    private final FetchDataService fetchDataService;
+    private final UserProfileService userProfileService;
+    private final CareerService careerService;
 
     @GetMapping
     public ResponseEntity<?> getRecommendation(Authentication authentication) {
         UserEntity user = (UserEntity) authentication.getPrincipal();
         UserProfileEntity userProfile = userProfileService.findByUser(user);
 
-        List<Object> recommendations = fetchDataService.fetchData(
+        List<ProfessionVacancies> recommendations = careerService.fetchData(
                 userProfile.getSkills(),
                 userProfile.getInterests(),
                 userProfile.getEducationLevel(),
