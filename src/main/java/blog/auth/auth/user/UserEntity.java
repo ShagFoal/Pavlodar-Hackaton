@@ -1,5 +1,6 @@
 package blog.auth.auth.user;
 
+import blog.auth.auth.UserProfile.UserProfileEntity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -20,6 +21,9 @@ public class UserEntity implements UserDetails {
     private String username;
     private String password;
     private String email;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private UserProfileEntity userProfile;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
