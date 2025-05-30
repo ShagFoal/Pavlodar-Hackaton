@@ -43,13 +43,16 @@ public class ProfileController {
     }
 
     @GetMapping("/myProfile")
-    public ResponseEntity<UserProfileEntity> getProfile(Authentication authentication) {
+    public ResponseEntity<UserProfileDto> getProfile(Authentication authentication) {
         UserEntity user = (UserEntity) authentication.getPrincipal();
+        user = userService.findByEmail(user.getEmail());
+        user = userService.findById(user.getId());
         UserProfileEntity profile = userProfileService.findByUser(user);
-        if (profile == null) {
+        UserProfileDto profileDto = new UserProfileDto(profile,user);
+        if (profileDto == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(profile);
+        return ResponseEntity.ok(profileDto);
     }
 
 

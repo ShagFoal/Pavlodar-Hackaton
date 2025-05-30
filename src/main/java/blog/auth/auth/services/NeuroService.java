@@ -18,7 +18,7 @@ public class NeuroService {
     public NeuroService() {
         this.webClient = WebClient.builder()
                 .baseUrl("https://api.openai.com/v1/chat/completions")
-                .defaultHeader("Authorization", "Bearer " + "api key")
+                .defaultHeader("Authorization", "Bearer " + "api-key")
                 .defaultHeader("Content-Type", "application/json")
                 .build();
     }

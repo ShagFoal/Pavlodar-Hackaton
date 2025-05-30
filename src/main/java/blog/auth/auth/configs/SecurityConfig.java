@@ -4,6 +4,7 @@ import blog.auth.auth.jwt.JwtRequestFilter;
 import blog.auth.auth.user.UserEntity;
 import blog.auth.auth.user.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +22,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
@@ -38,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/register").permitAll()
                         .anyRequest().authenticated())
+//                        .anyRequest().permitAll())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
@@ -64,6 +67,8 @@ public class SecurityConfig {
             String password = authentication.getCredentials().toString();
             UserEntity user = userService.findByEmail(email);
             if (user == null) throw new BadCredentialsException("Такого пользователя нет");
+            log.warn("User password {}",user.getPassword());
+            log.warn("Password {}",password);
             if (!userService.passwordMathes(password,user.getPassword())) throw new BadCredentialsException("Пароли не совпадают");
             return new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword());
         };

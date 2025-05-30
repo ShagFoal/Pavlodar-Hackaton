@@ -21,6 +21,10 @@ public class UserService implements UserDetailsService {
         return repo.findByEmail(email).orElse(null);
     }
 
+    public UserEntity findById(Long id) {
+        return repo.findById(id).orElse(null);
+    }
+
     public UserEntity save(UserEntity user) {
         if (user != null) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -37,4 +41,6 @@ public class UserService implements UserDetailsService {
     public UserEntity loadUserByUsername(String email) throws UsernameNotFoundException {
         return findByEmail(email);
     }
+
+
 }
