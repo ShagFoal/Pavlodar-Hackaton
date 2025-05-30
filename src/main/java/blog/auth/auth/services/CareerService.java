@@ -41,8 +41,8 @@ public class CareerService {
                     prof.block().getProfession(),
                     prof.block().getDescription(),
                     vacancyResponse.vacancies(),
-                    vacancyResponse.averageSalary(),
-                    vacancyResponse.medianSalary(),
+                    (vacancyResponse.averageSalary() == null) ? 0.0 : vacancyResponse.averageSalary(),
+                    (vacancyResponse.medianSalary() == null) ? 0.0 : vacancyResponse.medianSalary(),
                     vacancyResponse.levels(),
                     vacancyResponse.trend(),
                     prof.block().getMatchScore()
